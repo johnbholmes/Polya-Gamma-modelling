@@ -28,7 +28,7 @@
 
 
 #Version 1: This assumes structured patterns (factor loadings) are not equal across ethnicity.
-Binom.PGPCAtie<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL){
+Binom.PGPCA<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL){
   library(BayesLogit)
   library(rARPACK)
   n<-dim(y)[1]
@@ -105,8 +105,8 @@ Binom.PGPCAtie<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL){
     
     #Rotation corrected model. 
     use<-svds(decomp,k=f,nu=f,nv=f)
-    mcor<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
-    if(n < k) {mcor<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
+    mcor<-mcor2<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
+    if(n < k) {mcor<-mcor2<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
     #To ensure the same factor is not picked twice, do permutation fix as a for loop.
     permuteind<-0
     for(fo in 1:(f-1)){
@@ -115,7 +115,7 @@ Binom.PGPCAtie<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL){
     }
     permuteind[f]<-(1:f)[-which(1:f %in% permuteind[1:(f-1)])]
 
-    signL<-sign(diag(mcor[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
+    signL<-sign(diag(mcor2[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
 
     Loadingp1	    <-use$v[,permuteind]%*%diag(signL)	   #Fixing sign invariance.	
     
@@ -242,8 +242,8 @@ Binom.PGpolicePCA<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL){
 
     #Rotation corrected model. 
     use<-svds(decomp,k=f,nu=f,nv=f)
-    mcor<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
-    if(n < k) {mcor<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
+    mcor<-mcor2<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
+    if(n < k) {mcor<-mcor2<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
     #To ensure the same factor is not picked twice, do permutation fix as a for loop.
     permuteind<-0
     for(fo in 1:(f-1)){
@@ -252,7 +252,7 @@ Binom.PGpolicePCA<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL){
     }
     permuteind[f]<-(1:f)[-which(1:f %in% permuteind[1:(f-1)])]
     
-    signL<-sign(diag(mcor[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
+    signL<-sign(diag(mcor2[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
     
     Loadingp1	    <-use$v[,permuteind]%*%diag(signL)	   #Fixing sign invariance.    
     
@@ -398,8 +398,8 @@ Binom.PGFA<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL,alpha,beta)
     
     #Rotation corrected model. 
     use<-svds(decomp,k=f,nu=f,nv=f)
-    mcor<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
-    if(n < k) {mcor<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
+    mcor<-mcor2<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
+    if(n < k) {mcor<-mcor2<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
     #To ensure the same factor is not picked twice, do permutation fix as a for loop.
     permuteind<-0
     for(fo in 1:(f-1)){
@@ -408,7 +408,7 @@ Binom.PGFA<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL,alpha,beta)
     }
     permuteind[f]<-(1:f)[-which(1:f %in% permuteind[1:(f-1)])]
     
-    signL<-sign(diag(mcor[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
+    signL<-sign(diag(mcor2[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
     
     Loadingp1	    <-use$v[,permuteind]%*%diag(signL)	   #Fixing sign invariance.    
   
@@ -548,8 +548,8 @@ Binom.PGpoliceFA<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL,alpha
     
     #Rotation corrected model. 
     use<-svds(decomp,k=f,nu=f,nv=f)
-    mcor<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
-    if(n < k) {mcor<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
+    mcor<-mcor2<-cor(use$v,keep$v)              #This is included to minimise shuffling between factors with similar proportions of variance explained.
+    if(n < k) {mcor<-mcor2<-cor(use$u,keep$u) }    #Fix for if permutation results in same factor picked twice or more.
     #To ensure the same factor is not picked twice, do permutation fix as a for loop.
     permuteind<-0
     for(fo in 1:(f-1)){
@@ -558,7 +558,7 @@ Binom.PGpoliceFA<-function(y,f,maxtrial,iter,burnin,intercept,alphaL,betaL,alpha
     }
     permuteind[f]<-(1:f)[-which(1:f %in% permuteind[1:(f-1)])]
     
-    signL<-sign(diag(mcor[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
+    signL<-sign(diag(mcor2[permuteind,]))   #This is included to stop bi-modality due to sign invariance.
     
     Loadingp1	    <-use$v[,permuteind]%*%diag(signL)	   #Fixing sign invariance.
     
